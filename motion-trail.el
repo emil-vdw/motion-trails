@@ -40,6 +40,32 @@ user-error ERROR-MESSAGE on failure."
            (motion-trail--pulse-sexp))
        (user-error error-message))))
 
+(defmacro motion-trail--pulse-region-at-destination (error-message &rest body)
+  "Perform BODY operations and pulse the resulting region."
+  (declare (indent 1))
+  `(save-excursion
+     (condition-case err
+         (progn
+           ,@body
+           (motion-trail--pulse-region (region-beginning) (region-end)))
+       (user-error error-message))))
+
+;;; Motion trails for built-in commands.
+(defun motion-trail--yank (&rest args)
+  (motion-trail--pulse-region (region-beginning) (region-end)))
+
+(defun motion-trail--builtin-init ()
+  (advice-add 'yank :after #'motion-trail--yank)
+  (advice-add 'yank-pop :after #'motion-trail--yank))
+
+(defun motion-trail--builtin-remove ()
+  (advice-remove 'yank #'motion-trail--yank)
+  (advice-remove 'yank-pop #'motion-trail--yank))
+
+(add-to-list 'motion-trail--init-functions #'motion-trail--builtin-init)
+(add-to-list 'motion-trail--remove-functions #'motion-trail--builtin-remove)
+
+
 ;;; Treesitter integration.
 (defun motion-trail-pulse-ts-node (node)
   "Pulse the treesitter NODE's region."
@@ -106,7 +132,6 @@ user-error ERROR-MESSAGE on failure."
 
   (add-to-list 'motion-trail--init-functions #'motion-trail--lext-initialize)
   (add-to-list 'motion-trail--remove-functions #'motion-trail--lext-remove))
-
 
 (define-minor-mode motion-trail-mode
   "Show motion trails after buffer manipulations."
