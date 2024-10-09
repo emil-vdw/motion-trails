@@ -34,7 +34,7 @@
 user-error ERROR-MESSAGE on failure."
   (declare (indent 1))
   `(save-excursion
-     (condition-case err
+     (condition-case _
          (progn
            ,@body
            (motion-trails--pulse-sexp))
@@ -44,7 +44,7 @@ user-error ERROR-MESSAGE on failure."
   "Perform BODY operations and pulse the resulting region."
   (declare (indent 1))
   `(save-excursion
-     (condition-case err
+     (condition-case _
          (progn
            ,@body
            (motion-trails--pulse-region (region-beginning) (region-end)))
