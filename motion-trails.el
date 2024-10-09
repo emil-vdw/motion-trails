@@ -17,7 +17,7 @@
 ;;; Code:
 
 (defface motion-trails-face
-  '((t (:inherit mouse-drag-and-drop-region)))
+  '((t (:inherit region)))
   "Face that motion trails are pulsed with.")
 
 (defvar motion-trails--init-functions '())
