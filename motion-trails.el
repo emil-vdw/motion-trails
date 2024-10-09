@@ -51,7 +51,7 @@ user-error ERROR-MESSAGE on failure."
        (user-error ,error-message))))
 
 ;;; Motion trails for built-in commands.
-(defun motion-trails--yank (&rest args)
+(defun motion-trails--yank (&rest _)
   (motion-trails--pulse-region (region-beginning) (region-end)))
 
 (defun motion-trails--builtin-init ()
@@ -88,7 +88,7 @@ user-error ERROR-MESSAGE on failure."
   (motion-trails--pulse-sexp-at-destination "no previous sexp"
     (thing-at-point--beginning-of-sexp)))
 
-(defun motion-trails--pulse-next-sexp (&rest args)
+(defun motion-trails--pulse-next-sexp (&rest _)
   (motion-trails--pulse-sexp-at-destination "no next sexp"
     (thing-at-point--beginning-of-sexp)
     (forward-sexp)
