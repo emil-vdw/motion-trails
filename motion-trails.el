@@ -55,8 +55,9 @@ user-error ERROR-MESSAGE on failure."
   (motion-trails--pulse-region (region-beginning) (region-end)))
 
 (defun motion-trails--builtin-init ()
-  (advice-add 'yank :after #'motion-trails--yank)
-  (advice-add 'yank-pop :after #'motion-trails--yank))
+  (advice-add #'yank :after #'motion-trails--yank)
+  (advice-add #'yank-pop :after #'motion-trails--yank)
+  (advice-add #'kill-ring-save :before #'motion-trails--pulse-region))
 
 (defun motion-trails--builtin-remove ()
   (advice-remove 'yank #'motion-trails--yank)
