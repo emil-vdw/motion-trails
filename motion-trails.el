@@ -23,11 +23,15 @@
 (defvar motion-trails--init-functions '())
 (defvar motion-trails--remove-functions '())
 
-(defun motion-trails--pulse-region (start end)
+(defun motion-trails--pulse-region (&optional start end &rest _)
   "Momentarily pulse the region between start and end."
-  (pulse-momentary-highlight-region start
-                                    end
-                                    'motion-trails-face))
+  (let ((start (or start
+                   (region-beginning)))
+        (end (or end
+                 (region-end))))
+    (pulse-momentary-highlight-region start
+                                      end
+                                      'motion-trails-face)))
 
 (defmacro motion-trails--pulse-sexp-at-destination (error-message &rest body)
   "Navigate to a target sexp using BODY and pulse it signalling
@@ -40,18 +44,16 @@ user-error ERROR-MESSAGE on failure."
            (motion-trails--pulse-sexp))
        (user-error ,error-message))))
 
-;;; Motion trails for built-in commands.
-(defun motion-trails--yank (&rest _)
-  (motion-trails--pulse-region (region-beginning) (region-end)))
-
 (defun motion-trails--builtin-init ()
-  (advice-add #'yank :after #'motion-trails--yank)
-  (advice-add #'yank-pop :after #'motion-trails--yank)
+  (advice-add #'yank :after #'motion-trails--pulse-region)
+  (advice-add #'yank-pop :after #'motion-trails--pulse-region)
+  ;; We have to pulse before because of the lengthy point-mark exchange animation.
   (advice-add #'kill-ring-save :before #'motion-trails--pulse-region))
 
 (defun motion-trails--builtin-remove ()
-  (advice-remove 'yank #'motion-trails--yank)
-  (advice-remove 'yank-pop #'motion-trails--yank))
+  (advice-remove 'yank #'motion-trails--pulse-region)
+  (advice-remove 'yank-pop #'motion-trails--pulse-region)
+  (advice-remove 'kill-ring-save #'motion-trails--pulse-region))
 
 (add-to-list 'motion-trails--init-functions #'motion-trails--builtin-init)
 (add-to-list 'motion-trails--remove-functions #'motion-trails--builtin-remove)
