@@ -133,6 +133,7 @@ user-error ERROR-MESSAGE on failure."
   (add-to-list 'motion-trails--init-functions #'motion-trails--lext-initialize)
   (add-to-list 'motion-trails--remove-functions #'motion-trails--lext-remove))
 
+;;;###autoload
 (define-minor-mode motion-trails-mode
   "Show motion trails after buffer manipulations."
   :init-value nil
