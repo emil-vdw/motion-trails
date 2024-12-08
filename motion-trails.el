@@ -4,7 +4,7 @@
 ;; Maintainer: Emil van der Westhuizen <vdwemil@protonmail.com>
 ;; Created:  4 August 2024
 ;; Version: 0.1
-;; Package-Requires: ((emacs "29.3"))
+;; Package-Requires: ((emacs "29"))
 ;; Homepage: https://github.com/emil-vdw/motion-trails
 ;; Keywords:
 
