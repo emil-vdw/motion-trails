@@ -40,16 +40,6 @@ user-error ERROR-MESSAGE on failure."
            (motion-trails--pulse-sexp))
        (user-error ,error-message))))
 
-(defmacro motion-trails--pulse-region-at-destination (error-message &rest body)
-  "Perform BODY operations and pulse the resulting region."
-  (declare (indent 1))
-  `(save-excursion
-     (condition-case _
-         (progn
-           ,@body
-           (motion-trails--pulse-region (region-beginning) (region-end)))
-       (user-error ,error-message))))
-
 ;;; Motion trails for built-in commands.
 (defun motion-trails--yank (&rest _)
   (motion-trails--pulse-region (region-beginning) (region-end)))
